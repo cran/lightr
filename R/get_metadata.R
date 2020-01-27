@@ -22,26 +22,35 @@
 #'   * `dark_boxcar`: Boxcar width for the dark reference
 #'   * `sample_boxcar`: Boxcar width for the sample reference
 #'
+#' @inherit lr_get_spec details
+#'
 #' @section Warning:
 #' `white_inttime`, `dark_inttime` and `sample_inttime` should be equal. The
 #' normalised data may be inaccurate otherwise.
 #'
-#' @importFrom pbmcapply pbmclapply
 #' @importFrom tools file_path_sans_ext
+#' @importFrom future.apply future_lapply
+#' @importFrom progressr with_progress progressor
 #'
 #' @references White TE, Dalrymple RL, Noble DWA, O'Hanlon JC, Zurek DB,
 #' Umbers KDL. Reproducible research in the study of biological coloration.
 #' Animal Behaviour. 2015 Aug 1;106:51-7 (\doi{10.1016/j.anbehav.2015.05.007}).
 #'
 #' @examples
+#' \donttest{
 #' lr_get_metadata(system.file("testdata", "procspec_files",
 #'                             package = "lightr"),
 #'                 ext = "ProcSpec")
+#' }
 
 lr_get_metadata <- function(where = getwd(), ext = "ProcSpec", sep = NULL,
-                         subdir = FALSE, subdir.names = FALSE,
-                         cores = getOption("mc.cores", 2L),
-                         ignore.case = TRUE) {
+                            subdir = FALSE, subdir.names = FALSE, cores = NULL,
+                            ignore.case = TRUE) {
+
+  if (!missing(cores)) {
+    warning("'cores' argument is deprecated. See ?future::plan for more info ",
+            "about how you can choose your parallelisation strategy.")
+  }
 
   extension <- paste0("\\.", ext, "$", collapse = "|")
 
@@ -69,21 +78,20 @@ lr_get_metadata <- function(where = getwd(), ext = "ProcSpec", sep = NULL,
 
   specnames <- file_path_sans_ext(file_names)
 
-  if (cores > 1 && .Platform$OS.type == "windows") {
-    cores <- 1L
-    message('Parallel processing not available in Windows; "cores" set to 1.\n')
-  }
-
   gmd <- function(ff) {
 
     df <- dispatch_parser(ff, sep = sep)[[2]]
 
   }
 
-  tmp <- pbmclapply(files, function(x)
-    tryCatch(gmd(x),
-             error = function(e) NULL
-    ), mc.cores = cores)
+  with_progress({
+    p <- progressor(along = files)
+    tmp <- future_lapply(files, function(x) {
+      p()
+      tryCatch(gmd(x),
+               error = function(e) NULL)
+    })
+  })
 
   whichfailed <- which(vapply(tmp, is.null, logical(1)))
 

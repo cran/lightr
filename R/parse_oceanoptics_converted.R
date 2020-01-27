@@ -1,6 +1,7 @@
-#' Parse OceanOptics converted file
+#' Parse OceanInsight converted file
 #'
-#' Parse OceanOptics converted file. <https://oceanoptics.com/>
+#' Parse OceanInsight (formerly OceanOptics) converted file.
+#' <https://www.oceaninsight.com/>
 #'
 #' @inheritParams lr_parse_generic
 #'
@@ -65,7 +66,7 @@ lr_parse_jaz <- function(filename) {
   # Some files are missing the ending "tag". Let's then assume that data go to
   # the end of file.
   if (length(data_end)==0) {
-    data_end = length(content)
+    data_end <- length(content)
   }
 
   # Some files have an extra header for the data, some don't...

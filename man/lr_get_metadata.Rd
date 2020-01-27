@@ -10,7 +10,7 @@ lr_get_metadata(
   sep = NULL,
   subdir = FALSE,
   subdir.names = FALSE,
-  cores = getOption("mc.cores", 2L),
+  cores = NULL,
   ignore.case = TRUE
 )
 }
@@ -18,8 +18,9 @@ lr_get_metadata(
 \item{where}{Folder in which files are located (defaults to current working
 directory).}
 
-\item{ext}{File extension to be searched for, without the "."
-(defaults to \code{txt}).}
+\item{ext}{File extension to be searched for, without the "." (defaults to
+\code{txt}). You can also use a character vector to specify multiple file
+extensions.}
 
 \item{sep}{Column delimiting characters to be considered in addition to the
 default (which are: tab, space, and ";")}
@@ -30,8 +31,8 @@ the search? (defaults to \code{FALSE}).}
 \item{subdir.names}{Should subdirectory path be included in the name of the
 spectra? (defaults to \code{FALSE}).}
 
-\item{cores}{Number of cores to be used. If greater than 1, import will use
-parallel processing (not available in Windows).}
+\item{cores}{deprecated. See \code{\link[future:plan]{future::plan()}} for more details on how to
+customise your parallelisation strategy.}
 
 \item{ignore.case}{Should the extension search be case insensitive? (defaults
 to \code{TRUE})}
@@ -58,6 +59,13 @@ A data.frame containing one file per row and the following columns:
 \description{
 Finds and imports metadata from spectra files in a given location.
 }
+\details{
+You can customise the type of parallel processing used by this function with
+the \code{\link[future:plan]{future::plan()}} function. This works on all operating systems, as well
+as high performance computing (HPC) environment. Similarly, you can customise
+the way progress is shown with the \code{\link[progressr:handlers]{progressr::handlers()}} functions
+(progress bar, acoustic feedback, nothing, etc.)
+}
 \section{Warning}{
 
 \code{white_inttime}, \code{dark_inttime} and \code{sample_inttime} should be equal. The
@@ -65,9 +73,11 @@ normalised data may be inaccurate otherwise.
 }
 
 \examples{
+\donttest{
 lr_get_metadata(system.file("testdata", "procspec_files",
                             package = "lightr"),
                 ext = "ProcSpec")
+}
 }
 \references{
 White TE, Dalrymple RL, Noble DWA, O'Hanlon JC, Zurek DB,

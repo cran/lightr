@@ -10,7 +10,7 @@ lr_convert_tocsv(
   decimal = ".",
   sep = NULL,
   subdir = FALSE,
-  cores = getOption("mc.cores", 2L),
+  cores = NULL,
   ignore.case = TRUE,
   overwrite = FALSE
 )
@@ -19,8 +19,9 @@ lr_convert_tocsv(
 \item{where}{Folder in which files are located (defaults to current working
 directory).}
 
-\item{ext}{File extension to be searched for, without the "."
-(defaults to \code{txt}).}
+\item{ext}{File extension to be searched for, without the "." (defaults to
+\code{txt}). You can also use a character vector to specify multiple file
+extensions.}
 
 \item{decimal}{Character to be used to identify decimal plates
 (defaults to \code{.}).}
@@ -31,8 +32,8 @@ default (which are: tab, space, and ";")}
 \item{subdir}{Should subdirectories within the \code{where} folder be included in
 the search? (defaults to \code{FALSE}).}
 
-\item{cores}{Number of cores to be used. If greater than 1, import will use
-parallel processing (not available in Windows).}
+\item{cores}{deprecated. See \code{\link[future:plan]{future::plan()}} for more details on how to
+customise your parallelisation strategy.}
 
 \item{ignore.case}{Should the extension search be case insensitive? (defaults
 to \code{TRUE})}
@@ -46,6 +47,13 @@ file paths
 }
 \description{
 Convert spectral data files to csv files
+}
+\details{
+You can customise the type of parallel processing used by this function with
+the \code{\link[future:plan]{future::plan()}} function. This works on all operating systems, as well
+as high performance computing (HPC) environment. Similarly, you can customise
+the way progress is shown with the \code{\link[progressr:handlers]{progressr::handlers()}} functions
+(progress bar, acoustic feedback, nothing, etc.)
 }
 \section{Warning}{
 

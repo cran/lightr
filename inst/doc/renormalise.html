@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <meta name="author" content="Hugo Gruson" />
 
-<meta name="date" content="2019-11-13" />
+<meta name="date" content="2020-01-27" />
 
 <title>Renormalise spectral data with a custom reference</title>
 
@@ -38,7 +37,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -118,9 +117,6 @@ padding-right: 2em;
 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 font-size: 14px;
 line-height: 1.35;
-}
-#header {
-text-align: center;
 }
 #TOC {
 clear: both;
@@ -289,7 +285,8 @@ code > span.st { color: #d14; }
 code > span.co { color: #888888; font-style: italic; } 
 code > span.ot { color: #007020; } 
 code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
 
@@ -304,7 +301,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Renormalise spectral data with a custom reference</h1>
 <h4 class="author">Hugo Gruson</h4>
-<h4 class="date">2019-11-13</h4>
+<h4 class="date">2020-01-27</h4>
 
 
 
@@ -312,24 +309,24 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <p>We don’t recommend the use of those functions unless you absolutely have to. Most users should use <code>lr_get_spec()</code> and <code>lr_get_metadata()</code> instead.</p>
 <p>Here, we take the example of the method presented in <a href="https://doi.org/10.1098/rsfs.2018.0049">Gruson <em>et al</em> (2018)</a> where reflectance spectra need to be normalised in an unusual way.</p>
 <p>Raw, un-normalised spectral data depends on both the spectrometer and the lamp as well as the conditions during the recording (including ambient light, temperature, <em>etc</em>.). To allow for comparison between studies, it is thus normalised by a white and a dark reference with the following formula:</p>
-<p><span class="math display">\[\text{Processed} = \dfrac{\text{Raw} - \text{Dark}}{\text{White} - \text{Dark}}\]</span></p>
+<p><math> <mrow> <mtext>Processed</mtext> <mo>=</mo> <mfrac> <mrow><mtext>Raw</mtext><mo>-</mo><mtext>Dark</mtext></mrow> <mrow><mtext>White</mtext><mo>-</mo><mtext>Dark</mtext></mrow> </mfrac> </mrow> </math></p>
 <p>For this example here, we need to normalise the raw data by a white reference contained in another file. This can’t be done with with <code>lr_get_spec()</code> because <code>lr_get_spec()</code> returns reflectance spectra that have already been normalised by the white reference contained in the same file.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(lightr)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(lightr)</a></code></pre></div>
 <div id="step-1-import-un-normalised-data" class="section level2">
 <h2>Step 1: import un-normalised data</h2>
 <p>We manually import the data using the appropriate low-level parser:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">reflect_data &lt;-<span class="st"> </span><span class="kw">lr_parse_procspec</span>(</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">  <span class="kw">system.file</span>(<span class="st">&quot;testdata&quot;</span>, <span class="st">&quot;procspec_files&quot;</span>, <span class="st">&quot;OceanOptics_Linux.ProcSpec&quot;</span>,</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">               <span class="dt">package =</span> <span class="st">&quot;lightr&quot;</span>)</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">  )</a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="kw">length</span>(reflect_data)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">reflect_data &lt;-<span class="st"> </span><span class="kw">lr_parse_procspec</span>(</a>
+<a class="sourceLine" id="cb2-2" title="2">  <span class="kw">system.file</span>(<span class="st">&quot;testdata&quot;</span>, <span class="st">&quot;procspec_files&quot;</span>, <span class="st">&quot;OceanOptics_Linux.ProcSpec&quot;</span>,</a>
+<a class="sourceLine" id="cb2-3" title="3">               <span class="dt">package =</span> <span class="st">&quot;lightr&quot;</span>)</a>
+<a class="sourceLine" id="cb2-4" title="4">  )</a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="kw">length</span>(reflect_data)</a></code></pre></div>
 <pre><code>## [1] 2</code></pre>
 <p>The result contains 2 elements:</p>
 <ul>
 <li>the spectral data itself</li>
 <li>the metadata captured during the recording</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">head</span>(reflect_data[[<span class="dv">1</span>]])</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">head</span>(reflect_data[[<span class="dv">1</span>]])</a></code></pre></div>
 <pre><code>##         wl      dark     white     scope processed
 ## 1 176.3604 32822.795 32822.795 32822.795   0.00000
 ## 2 176.5816 32822.795 32822.795 32822.795   0.00000
@@ -341,25 +338,25 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="step-2-find-the-matching-white-reference" class="section level2">
 <h2>Step 2: find the matching white reference</h2>
 <p>We import that white reference in the same way:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">white_data &lt;-<span class="st"> </span><span class="kw">lr_parse_procspec</span>(</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">  <span class="kw">system.file</span>(<span class="st">&quot;testdata&quot;</span>, <span class="st">&quot;procspec_files&quot;</span>, <span class="st">&quot;whiteref.ProcSpec&quot;</span>,</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">               <span class="dt">package =</span> <span class="st">&quot;lightr&quot;</span>)</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4">)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">white_data &lt;-<span class="st"> </span><span class="kw">lr_parse_procspec</span>(</a>
+<a class="sourceLine" id="cb6-2" title="2">  <span class="kw">system.file</span>(<span class="st">&quot;testdata&quot;</span>, <span class="st">&quot;procspec_files&quot;</span>, <span class="st">&quot;whiteref.ProcSpec&quot;</span>,</a>
+<a class="sourceLine" id="cb6-3" title="3">               <span class="dt">package =</span> <span class="st">&quot;lightr&quot;</span>)</a>
+<a class="sourceLine" id="cb6-4" title="4">)</a></code></pre></div>
 </div>
 <div id="step-3-normalise-the-reflectance-data" class="section level2">
 <h2>Step 3: normalise the reflectance data</h2>
 <p>We can now normalise the reflectance spectrum with the equation stated at the beginning of this vignette:</p>
-<p><span class="math display">\[\text{Processed} = \dfrac{\text{Raw} - \text{Dark}}{\text{White} - \text{Dark}}\]</span></p>
+<p><math> <mrow> <mtext>Processed</mtext> <mo>=</mo> <mfrac> <mrow><mtext>Raw</mtext><mo>-</mo><mtext>Dark</mtext></mrow> <mrow><mtext>White</mtext><mo>-</mo><mtext>Dark</mtext></mrow> </mfrac> </mrow> </math></p>
 <p>But first, we verify that the integration times:</p>
 <p>We can now get rid of the metadata part and focus on the data only:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">reflect_data =<span class="st"> </span><span class="kw">data.frame</span>(reflect_data[[<span class="dv">1</span>]])</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">white_data =<span class="st"> </span><span class="kw">data.frame</span>(white_data[[<span class="dv">1</span>]])</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">reflect_data =<span class="st"> </span><span class="kw">data.frame</span>(reflect_data[[<span class="dv">1</span>]])</a>
+<a class="sourceLine" id="cb7-2" title="2">white_data =<span class="st"> </span><span class="kw">data.frame</span>(white_data[[<span class="dv">1</span>]])</a></code></pre></div>
 <p>As a last step before being able to normalise the data, we also need to check if the reflectance spectrum and the white reference are sampled with the same wavelengths:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">all.equal</span>(reflect_data<span class="op">$</span>wl, white_data<span class="op">$</span>wl)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">all.equal</span>(reflect_data<span class="op">$</span>wl, white_data<span class="op">$</span>wl)</a></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">res &lt;-<span class="st"> </span>(reflect_data<span class="op">$</span>scope <span class="op">-</span><span class="st"> </span>reflect_data<span class="op">$</span>dark) <span class="op">/</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="st">       </span>(white_data<span class="op">$</span>white <span class="op">-</span><span class="st"> </span>white_data<span class="op">$</span>dark)</a>
-<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="kw">head</span>(res)</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">res &lt;-<span class="st"> </span>(reflect_data<span class="op">$</span>scope <span class="op">-</span><span class="st"> </span>reflect_data<span class="op">$</span>dark) <span class="op">/</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb10-2" title="2"><span class="st">       </span>(white_data<span class="op">$</span>white <span class="op">-</span><span class="st"> </span>white_data<span class="op">$</span>dark)</a>
+<a class="sourceLine" id="cb10-3" title="3"><span class="kw">head</span>(res)</a></code></pre></div>
 <pre><code>## [1]        NaN        NaN        NaN -5.3333333 46.0000000  0.6190476</code></pre>
 </div>
 

@@ -12,16 +12,18 @@ lr_get_spec(
   sep = NULL,
   subdir = FALSE,
   subdir.names = FALSE,
-  cores = getOption("mc.cores", 2L),
-  ignore.case = TRUE
+  cores = NULL,
+  ignore.case = TRUE,
+  interpolate = TRUE
 )
 }
 \arguments{
 \item{where}{Folder in which files are located (defaults to current working
 directory).}
 
-\item{ext}{File extension to be searched for, without the "."
-(defaults to \code{txt}).}
+\item{ext}{File extension to be searched for, without the "." (defaults to
+\code{txt}). You can also use a character vector to specify multiple file
+extensions.}
 
 \item{lim}{A vector with two numbers determining the wavelength limits to be
 considered (defaults to \code{c(300, 700)}).}
@@ -38,22 +40,35 @@ the search? (defaults to \code{FALSE}).}
 \item{subdir.names}{Should subdirectory path be included in the name of the
 spectra? (defaults to \code{FALSE}).}
 
-\item{cores}{Number of cores to be used. If greater than 1, import will use
-parallel processing (not available in Windows).}
+\item{cores}{deprecated. See \code{\link[future:plan]{future::plan()}} for more details on how to
+customise your parallelisation strategy.}
 
 \item{ignore.case}{Should the extension search be case insensitive? (defaults
 to \code{TRUE})}
+
+\item{interpolate}{Boolean indicated whether spectral data should be
+interpolated and pruned at every nanometer. Note that this option can only
+work if all input data samples the same wavelengths. Defaults to \code{TRUE}.}
 }
 \value{
 A data.frame, containing the wavelengths in the first column and
 individual imported spectral files in the subsequent columns.
-Reflectance values are interpolated to the nearest wavelength integer.
 }
 \description{
 Finds and imports reflectance/transmittance/absorbance data from spectra
 files in a given location.
 }
+\details{
+You can customise the type of parallel processing used by this function with
+the \code{\link[future:plan]{future::plan()}} function. This works on all operating systems, as well
+as high performance computing (HPC) environment. Similarly, you can customise
+the way progress is shown with the \code{\link[progressr:handlers]{progressr::handlers()}} functions
+(progress bar, acoustic feedback, nothing, etc.)
+}
 \examples{
 lr_get_spec(system.file("testdata", package = "lightr"), ext = "jdx")
 
+}
+\seealso{
+\code{\link[pavo:getspec]{pavo::getspec()}}
 }
