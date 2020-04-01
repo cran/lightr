@@ -5,7 +5,7 @@
 #'
 #' @inheritParams lr_parse_generic
 #'
-#' @inherit lr_parse_generic return
+#' @inherit lr_parse_generic return details
 #'
 #' @examples
 #' lr_parse_jaz(system.file("testdata", "jazspec.jaz", package = "lightr"))
@@ -31,7 +31,18 @@ lr_parse_jaz <- function(filename) {
   savetime <- grep("^Date: .*", content, value = TRUE)
   savetime <- gsub("^Date: ", "", savetime)
 
-  specmodel <- NA
+  # OceanOptics files use locale-dependant date formats but it looks like they
+  # are always using English for this, even when the locale is not set to
+  # English
+  orig_locale <- Sys.getlocale("LC_TIME")
+  on.exit(Sys.setlocale("LC_TIME", orig_locale))
+  Sys.setlocale("LC_TIME", "C")
+
+  savetime <- as.character(as.Date(savetime,
+                                   tryFormats = c("%c", "%+"),
+                                   optional = TRUE))
+
+  specmodel <- NA_character_
 
   # For those, be careful, the line ends with '(specID)' so no $
   int <- grep("^Integration Time (.+): [[:digit:]]+", content, value = TRUE)
@@ -90,6 +101,7 @@ lr_parse_jaz <- function(filename) {
     colnames(data) <- c("W", "P")
 
   }
+  storage.mode(data) <- "numeric"
 
   cornames <- c("wl" = "W",
                 "dark" = "D",
@@ -98,15 +110,13 @@ lr_parse_jaz <- function(filename) {
                 "processed" = "P")
 
   data_final <- setNames(
-    as.data.frame(matrix(NA, nrow = nrow(data), ncol = 5)),
+    as.data.frame(matrix(NA_real_, nrow = nrow(data), ncol = 5)),
     names(cornames)
   )
 
   data_final[match(colnames(data), cornames)] <- data
 
-  data_final <- apply(data_final, 2, as.numeric)
-
-  return(list(data.frame(data_final), metadata))
+  return(list(data_final, metadata))
 }
 
 #' @rdname lr_parse_jaz

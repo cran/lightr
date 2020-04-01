@@ -5,7 +5,7 @@
 #'
 #' @inheritParams lr_parse_generic
 #'
-#' @inherit lr_parse_generic return
+#' @inherit lr_parse_generic return details
 #'
 #' @examples
 #' lr_parse_ttt(system.file("testdata", "avantes_export.ttt",
@@ -23,13 +23,20 @@ lr_parse_ttt <- function(filename) {
 
   # The ID is always included as the first 9 characters in the comment line
   specID <- gsub("([[:alnum:]]{9})-.*", "\\1", content[1])
-  author <- NA
-  savetime <- grep("^Timestamp", content, value = TRUE)
-  savetime <- gsub("^Timestamp \\[.+\\]([[:digit:]]+)$", "\\1", savetime)
-  if (length(savetime)==0) {
-    savetime <- NA
-  }
-  specmodel <- NA
+  author <- NA_character_
+
+  # FIXME: from what I undertand, this "timestamp" is abritrary since it
+  # represents the 10*microsecond units since last reset and we don't know
+  # when last reset occurred
+  #
+  # savetime <- grep("^Timestamp", content, value = TRUE)
+  # savetime <- gsub("^Timestamp \\[.+\\]([[:digit:]]+)$", "\\1", savetime)
+  # if (length(savetime)==0) {
+  #   savetime <- NA_character_
+  # }
+  savetime <- NA_character_
+
+  specmodel <- NA_character_
   inttime <- gsub("^Integration time: ([[:graph:]]+) ms$", "\\1", content[2])
   average <- gsub("^Average: ([[:digit:]]+) scans$", "\\1", content[3])
   boxcar <- gsub("^Nr of pixels used for smoothing: ", "", content[4])
@@ -45,14 +52,19 @@ lr_parse_ttt <- function(filename) {
                 dark_average, white_average, scope_average,
                 dark_boxcar, white_boxcar, scope_boxcar)
 
-  data_ind <- grep("^([[:digit:];.-])+$", content)
+  data_ind <- grep("^([[:digit:];.,-])+$", content)
   data <- strsplit(content[data_ind], ";")
   data <- do.call(rbind, data)
+
+  # Fix decimal for non-English files
+  data <- gsub(",", ".", data)
 
   colnames(data) <- strsplit(content[data_ind[1]-2], ";")[[1]]
 
   # Remove trailing whitespaces in names
   colnames(data) <- gsub("[[:space:]]*$", "", colnames(data))
+
+  storage.mode(data) <- "numeric"
 
   cornames <- c("wl" = "Wave",
                 "dark" = "Dark",
@@ -61,16 +73,13 @@ lr_parse_ttt <- function(filename) {
                 "processed" = "Transmittance")
 
   data_final <- setNames(
-    as.data.frame(matrix(NA, nrow = nrow(data), ncol = 5)),
+    as.data.frame(matrix(NA_real_, nrow = nrow(data), ncol = 5)),
     names(cornames)
   )
 
   data_final[match(colnames(data), cornames)] <- data
 
-  data_final <- apply(data_final, 2, as.numeric)
-
-  return(list(data.frame(data_final), metadata))
-
+  return(list(data_final, metadata))
 }
 
 #' @rdname lr_parse_ttt

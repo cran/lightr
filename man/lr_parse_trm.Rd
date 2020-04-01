@@ -4,6 +4,8 @@
 \alias{lr_parse_trm}
 \alias{lr_parse_abs}
 \alias{lr_parse_roh}
+\alias{lr_parse_rfl8}
+\alias{lr_parse_raw8}
 \title{Parse Avantes binary file}
 \usage{
 lr_parse_trm(filename)
@@ -11,25 +13,62 @@ lr_parse_trm(filename)
 lr_parse_abs(filename)
 
 lr_parse_roh(filename)
+
+lr_parse_rfl8(filename, specnum = 1L)
+
+lr_parse_raw8(filename, specnum = 1L)
 }
 \arguments{
 \item{filename}{Path of the file to parse}
+
+\item{specnum}{Integer representing the position of the spectrum to read in
+the file. This option only makes sense for AvaSoft8 files and is ignored
+in the other cases.}
 }
 \value{
 A list of two elements:
 \itemize{
 \item a dataframe with columns "wl", "dark", "white", "scope" and "processed",
 in that order
-\item a list with metadata including
+\item a character vector with metadata including:
+\itemize{
+\item \code{user}: Name of the spectrometer operator
+\item \code{date}: Timestamp of the recording (ISO 8601 format)
+\item \code{spec_model}: Model of the spectrometer
+\item \code{spec_ID}: Unique ID of the spectrometer
+\item \code{white_inttime}: Integration time of the white reference (in ms)
+\item \code{dark_inttime}: Integration time of the dark reference (in ms)
+\item \code{sample_inttime}: Integration time of the sample (in ms)
+\item \code{white_avgs}: Number of averaged measurements for the white reference
+\item \code{dark_avgs}: Number of averaged measurements for the dark reference
+\item \code{sample_avgs}: Number of averaged measurements for the sample
+\item \code{white_boxcar}: Boxcar width for the white reference
+\item \code{dark_boxcar}: Boxcar width for the dark reference
+\item \code{sample_boxcar}: Boxcar width for the sample reference
+}
 }
 }
 \description{
-Parse Avantes binary file. \url{https://www.avantes.com/products/spectrometers}
+Parse Avantes binary file (TRM, ABS, ROH, DRK, REF file extensions).
+\url{https://www.avantes.com/products/spectrometers}
+}
+\details{
+'processed' column computed by lightr with the function
+\code{\link[=compute_processed]{compute_processed()}}.
 }
 \examples{
 lr_parse_trm(system.file("testdata", "avantes_trans.TRM",
                          package = "lightr"))
 lr_parse_roh(system.file("testdata", "avantes_reflect.ROH",
                          package = "lightr"))
+
+lr_parse_rfl8(system.file("testdata", "compare", "Avantes",
+                          "feather.RFL8",
+                          package = "lightr"),
+              specnum = 1)
+lr_parse_rfl8(system.file("testdata", "compare", "Avantes",
+                          "feather.RFL8",
+                          package = "lightr"),
+              specnum = 2)
 
 }

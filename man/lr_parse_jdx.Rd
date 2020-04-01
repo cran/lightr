@@ -14,15 +14,35 @@ A list of two elements:
 \itemize{
 \item a dataframe with columns "wl", "dark", "white", "scope" and "processed",
 in that order
-\item a list with metadata including
+\item a character vector with metadata including:
+\itemize{
+\item \code{user}: Name of the spectrometer operator
+\item \code{date}: Timestamp of the recording (ISO 8601 format)
+\item \code{spec_model}: Model of the spectrometer
+\item \code{spec_ID}: Unique ID of the spectrometer
+\item \code{white_inttime}: Integration time of the white reference (in ms)
+\item \code{dark_inttime}: Integration time of the dark reference (in ms)
+\item \code{sample_inttime}: Integration time of the sample (in ms)
+\item \code{white_avgs}: Number of averaged measurements for the white reference
+\item \code{dark_avgs}: Number of averaged measurements for the dark reference
+\item \code{sample_avgs}: Number of averaged measurements for the sample
+\item \code{white_boxcar}: Boxcar width for the white reference
+\item \code{dark_boxcar}: Boxcar width for the dark reference
+\item \code{sample_boxcar}: Boxcar width for the sample reference
+}
 }
 }
 \description{
 Parse OceanInsight (formerly OceanOptics) JCAMP-DX (.jdx) file.
 \url{https://www.oceaninsight.com/}
 }
+\details{
+'processed' column computed by lightr with the function
+\code{\link[=compute_processed]{compute_processed()}}.
+}
 \examples{
-lr_parse_jdx(system.file("testdata", "OceanOptics.jdx", package = "lightr"))
+lr_parse_jdx(system.file("testdata", "OceanOptics_period.jdx",
+                         package = "lightr"))
 
 }
 \references{

@@ -9,7 +9,7 @@
 #' @return A data.frame containing one file per row and the following columns:
 #'   * `name`: File name (without the extension)
 #'   * `user`: Name of the spectrometer operator
-#'   * `date`: Timestamp of the recording
+#'   * `date`: Timestamp of the recording (ISO 8601 format)
 #'   * `spec_model`: Model of the spectrometer
 #'   * `spec_ID`: Unique ID of the spectrometer
 #'   * `white_inttime`: Integration time of the white reference (in ms)
@@ -49,7 +49,8 @@ lr_get_metadata <- function(where = getwd(), ext = "ProcSpec", sep = NULL,
 
   if (!missing(cores)) {
     warning("'cores' argument is deprecated. See ?future::plan for more info ",
-            "about how you can choose your parallelisation strategy.")
+            "about how you can choose your parallelisation strategy.",
+            call. = FALSE)
   }
 
   extension <- paste0("\\.", ext, "$", collapse = "|")
@@ -80,7 +81,7 @@ lr_get_metadata <- function(where = getwd(), ext = "ProcSpec", sep = NULL,
 
   gmd <- function(ff) {
 
-    df <- dispatch_parser(ff, sep = sep)[[2]]
+    dispatch_parser(ff, sep = sep)[[2]]
 
   }
 

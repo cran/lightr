@@ -2,7 +2,9 @@ context("convert_tocsv")
 
 # Create temp environment to run tests
 setup({
-  tdir <- tempdir()
+
+  tdir <- file.path(tempdir(), "test_convert")
+  dir.create(tdir)
   file.copy(from = list.files(test.file(),
                               full.names = TRUE),
             to = tdir, recursive = TRUE)
@@ -11,12 +13,9 @@ setup({
               file.path(tdir, "csv", "spec.csv"))
 })
 
-teardown({
-  unlink(tdir, recursive = TRUE)
-})
-
 test_that("Convert all", {
-  tdir <- tempdir()
+
+  tdir <- file.path(tempdir(), "test_convert")
 
   exts <- c("TRM", "ttt", "jdx", "jaz", "JazIrrad", "txt", "Transmission")
 
@@ -27,20 +26,24 @@ test_that("Convert all", {
   output_files <- tools::list_files_with_exts(tdir, "csv")
 
   # File names are kept
-  expect_setequal(tools::file_path_sans_ext(input_files),
-                  tools::file_path_sans_ext(output_files))
+  expect_setequal(!!tools::file_path_sans_ext(input_files),
+                  !!tools::file_path_sans_ext(output_files))
 
   # Output file names are invisibly returned
-  expect_setequal(converted_files, output_files)
+  expect_setequal(!!basename(converted_files),
+                  !!basename(output_files))
 
   # It doesn't change the behaviour of getspec
 #  expect_equal(getspec("conversion_test", exts),
 #               getspec("conversion_test", "csv", sep = ","))
 
+  unlink(output_files)
+
 })
 
 test_that("Convert recursive", {
-  tdir <- tempdir()
+
+  tdir <- file.path(tempdir(), "test_convert")
 
   lr_convert_tocsv(tdir, ext = "ProcSpec", subdir = TRUE)
 
@@ -53,50 +56,55 @@ test_that("Convert recursive", {
 
   expect_setequal(tools::file_path_sans_ext(input_files),
                   tools::file_path_sans_ext(output_files))
+
+  unlink(output_files)
+
 })
 
 test_that("Convert csv", {
-  tdir <- tempdir()
+
+  tdir <- file.path(tempdir(), "test_convert")
 
   expect_warning(lr_convert_tocsv(file.path(tdir, "csv"), ext = "csv",
                                   sep = ","))
 
-  lr_convert_tocsv(file.path(tdir, "csv"), ext = "csv", sep = ",",
-                   overwrite = TRUE)
+  output <- expect_message(
+    lr_convert_tocsv(file.path(tdir, "csv"), ext = "csv", sep = ",",
+                     overwrite = TRUE),
+    "files found"
+  )
+
+  unlink(output)
 
 })
 
 
 test_that("Convert warn/error", {
-  tdir <- tempdir()
+
+  tdir <- file.path(tempdir(), "test_convert")
   # Total fail
-  totalfail <- expression({
-    lr_convert_tocsv(tdir,
-                     ext = "fail")
-  })
-  expect_warning(eval(totalfail), "File import failed")
+  expect_warning(
+    expect_null(lr_convert_tocsv(tdir, ext = "fail")),
+    "File import failed"
+  )
 
-  expect_null(suppressWarnings(eval(totalfail)))
+  # Partial fail
+  output <- expect_warning(
+    lr_convert_tocsv(tdir, ext = c("fail", "jdx"), overwrite = TRUE),
+    "Could not import one or more"
+  )
 
-  # # Partial fail
-  partialfail <- expression({
-    lr_convert_tocsv(tdir,
-                     ext = c("fail", "jdx"),
-                     overwrite = TRUE)
-  })
-  expect_warning(eval(partialfail), "Could not import one or more")
+  unlink(output)
 
   # Missing
-  missing <- expression({
-    lr_convert_tocsv(where = getwd(), ext = "missing")
-  })
-  expect_warning(eval(missing), "No files found")
+  expect_warning(
+    expect_null(lr_convert_tocsv(where = tdir, ext = "missing")),
+    "No files found"
+  )
 
-  location <- expression({
-    lr_convert_tocsv()
-  })
-  expect_warning(eval(location), "Please provide a valid location")
-
-  expect_null(suppressWarnings(eval(missing)))
+  expect_warning(
+    expect_null(lr_convert_tocsv()),
+    "Please provide a valid location"
+  )
 
 })

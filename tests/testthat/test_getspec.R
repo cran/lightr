@@ -4,7 +4,7 @@ test_that("get_spec all", {
 
   res <- lr_get_spec(test.file(),
                   ext = c("TRM", "ttt", "jdx", "jaz", "JazIrrad", "csv", "txt",
-                          "Transmission"),
+                          "Transmission", "spc"),
                   sep = ",")
   expect_known_value(res, "known_output/getspec_all.rds")
 })
@@ -34,27 +34,21 @@ test_that("get_spec interpolate", {
 
 test_that("get_spec warn/error", {
   # Total fail
-  totalfail <- expression({
-    lr_get_spec(test.file(),
-                ext = "fail")
-  })
-  expect_warning(eval(totalfail), "File import failed")
-
-  expect_null(suppressWarnings(eval(totalfail)))
+  expect_warning(
+    expect_null(lr_get_spec(test.file(), ext = "fail")),
+    "File import failed"
+  )
 
   # Partial fail
-  partialfail <- expression({
-    lr_get_spec(test.file(),
-                ext = c("fail", "jdx"))
-  })
-  expect_warning(eval(partialfail), "Could not import one or more")
+  expect_warning(
+    lr_get_spec(test.file(), ext = c("fail", "jdx")),
+    "Could not import one or more"
+  )
 
   # Missing
-  missing <- expression({
-    lr_get_spec(ext = "missing")
-  })
-  expect_warning(eval(missing), "No files found")
-
-  expect_null(suppressWarnings(eval(missing)))
+  expect_warning(
+    expect_null(lr_get_spec(ext = "missing")),
+    "No files found"
+  )
 
 })

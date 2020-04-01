@@ -9,7 +9,23 @@
 #' @return A list of two elements:
 #'   * a dataframe with columns "wl", "dark", "white", "scope" and "processed",
 #'     in that order
-#'   * a list with metadata including
+#'   * a character vector with metadata including:
+#'     - `user`: Name of the spectrometer operator
+#'     - `date`: Timestamp of the recording (ISO 8601 format)
+#'     - `spec_model`: Model of the spectrometer
+#'     - `spec_ID`: Unique ID of the spectrometer
+#'     - `white_inttime`: Integration time of the white reference (in ms)
+#'     - `dark_inttime`: Integration time of the dark reference (in ms)
+#'     - `sample_inttime`: Integration time of the sample (in ms)
+#'     - `white_avgs`: Number of averaged measurements for the white reference
+#'     - `dark_avgs`: Number of averaged measurements for the dark reference
+#'     - `sample_avgs`: Number of averaged measurements for the sample
+#'     - `white_boxcar`: Boxcar width for the white reference
+#'     - `dark_boxcar`: Boxcar width for the dark reference
+#'     - `sample_boxcar`: Boxcar width for the sample reference
+#'
+#' @details
+#' 'processed' column computed by official software and provided as is.
 #'
 #' @examples
 #' lr_parse_generic(system.file("testdata", "spec.csv", package = "lightr"),
@@ -64,17 +80,17 @@ lr_parse_generic <- function(filename, decimal = ".", sep = NULL) {
   }
 
   # convert to numeric, check for NA
-  class(rawsplit) <- "numeric"
+  storage.mode(rawsplit) <- "numeric"
 
   # remove columns where all values are NAs (due to poor tabulation)
   rawsplit <- rawsplit[, !apply(rawsplit, 2, function(x) all(is.na(x)))]
 
-  metadata <- rep(NA, 13)
+  metadata <- rep(NA_character_, 13)
 
   data <- data.frame("wl" = rawsplit[, 1],
-                     "dark" = NA,
-                     "white" = NA,
-                     "scope" = NA,
+                     "dark" = NA_real_,
+                     "white" = NA_real_,
+                     "scope" = NA_real_,
                      "processed" = rawsplit[, dim(rawsplit)[2]])
 
   return(list(data, metadata))

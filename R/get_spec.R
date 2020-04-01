@@ -21,7 +21,7 @@
 #' @param ignore.case Should the extension search be case insensitive? (defaults
 #' to `TRUE`)
 #' @param interpolate Boolean indicated whether spectral data should be
-#' interpolated and pruned at every nanometer. Note that this option can only
+#' interpolated and pruned at every nanometre. Note that this option can only
 #' work if all input data samples the same wavelengths. Defaults to `TRUE`.
 #'
 #' @details
@@ -88,15 +88,24 @@ lr_get_spec <- function(where = getwd(), ext = "txt", lim = c(300, 700),
   message(nb_files, " files found; importing spectra:")
 
   if (!interpolate) {
-    gsp <- function(ff) {
-      dispatch_parser(ff, decimal = decimal, sep = sep)[[1]]
+    gsp <- function(f) {
+      dispatch_parser(f, decimal = decimal, sep = sep)[[1]]
     }
   } else {
-    gsp <- function(ff) {
-      df <- dispatch_parser(ff, decimal = decimal, sep = sep)[[1]]
+    gsp <- function(f) {
+      df <- dispatch_parser(f, decimal = decimal, sep = sep)[[1]]
 
-      # Prevent approx from filling a complete gap in the range of interest.
+      # Trim now because otherwise, approx() can fill the region of interest
+      # with bogus data (e.g., if the data is complete between 200-300nm and
+      # 800-1200nm and your region of interested if 300-700 nm).
       bounds <- which(df$wl >= lim[1] & df$wl <= lim[2])
+
+      if (length(bounds) == 0) {
+        warning(f, " does not contain spectral data over the provided wl range",
+                call. = FALSE)
+        return(NULL)
+      }
+
       df <- df[c(min(bounds)-1, bounds, max(bounds)+1), ]
 
       approx(df[, "wl"], df[, "processed"],

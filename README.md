@@ -11,7 +11,7 @@
 
 There is no standard file format for spectrometry data and different scientific
 instrumentation companies use wildly different formats to store spectral data.
-Vendor proprietary softwares sometimes have an option but convert those formats
+Vendor proprietary software sometimes has an option but convert those formats
 instead human readable files such as `csv` but in the process, most metadata
 are lost. However, those metadata are critical to ensure reproducibility ([White
 *et al*, 2015](https://doi.org/10.1016/j.anbehav.2015.05.007)).
@@ -89,19 +89,21 @@ lr_convert_tocsv(where = system.file("testdata/procspec_files",
 This package is still under development but currently supports (you can click
 on the extension in the tables to see an example of this file format):
 
-### [OceanInsight (formerly OceantOptics)](https://www.oceaninsight.com/)
+### [OceanInsight (formerly OceanOptics)](https://www.oceaninsight.com/)
 
   | Extension        | Parser                |
   |:-----------------|:----------------------|
   | [`jdx`]          | `lr_parse_jdx()`      |
   | [`ProcSpec`]     | `lr_parse_procspec()` |
+  | [`spc`][spc1]    | `lr_parse_spc()`      |
   | [`jaz`]          | `lr_parse_jaz()`      |
   | [`JazIrrad`]     | `lr_parse_jazirrad()` |
   | [`Transmission`] | `lr_parse_jaz()`      |
   | [`txt`](https://raw.githubusercontent.com/ropensci/lightr/master/inst/testdata/OceanView.txt) | `lr_parse_jaz()` |
 
-[`jdx`]: https://raw.githubusercontent.com/ropensci/lightr/master/inst/testdata/OceanOptics.jdx
+[`jdx`]: https://raw.githubusercontent.com/ropensci/lightr/master/inst/testdata/OceanOptics_period.jdx
 [`ProcSpec`]: https://github.com/ropensci/lightr/raw/master/inst/testdata/procspec_files/whiteref.ProcSpec
+[spc1]: https://github.com/ropensci/lightr/raw/master/inst/testdata/OceanOptics.spc
 [`jaz`]: https://raw.githubusercontent.com/ropensci/lightr/master/inst/testdata/jazspec.jaz
 [`JazIrrad`]: https://raw.githubusercontent.com/ropensci/lightr/master/inst/testdata/irrad.JazIrrad
 [`Transmission`]: https://raw.githubusercontent.com/ropensci/lightr/master/inst/testdata/FMNH6834.00000001.Master.Transmission
@@ -116,17 +118,28 @@ on the extension in the tables to see an example of this file format):
   | [`trt`]          | `lr_parse_trt()`      |
   | [`ttt`]          | `lr_parse_ttt()`      |
   | [`txt`](https://raw.githubusercontent.com/ropensci/lightr/master/inst/testdata/avasoft8.txt) | `lr_parse_generic()` |
-
+  | [`DRK`]          | `lr_parse_trm()`      |
+  | [`REF`]          | `lr_parse_trm()`      |
+  | [`RFL8`]         | `lr_parse_rfl8()`     |
+  | [`Raw8`]         | `lr_parse_raw8()`     |
+  
 [`TRM`]: https://github.com/ropensci/lightr/raw/master/inst/testdata/avantes2.TRM
 [`ROH`]: https://github.com/ropensci/lightr/raw/master/inst/testdata/avantes_reflect.ROH
 [`trt`]: https://github.com/ropensci/lightr/raw/master/inst/testdata/avantes_export2.trt
 [`ttt`]: https://github.com/ropensci/lightr/raw/master/inst/testdata/avantes_export.ttt
-  
+[`DRK`]: https://github.com/ropensci/lightr/raw/master/inst/testdata/1305084U1.DRK
+[`REF`]: https://github.com/ropensci/lightr/raw/master/inst/testdata/1305084U1.REF
+[`RFL8`]: https://github.com/ropensci/lightr/raw/master/inst/testdata/compare/Avantes/feather.RFL8
+[`Raw8`]: https://github.com/ropensci/lightr/raw/master/inst/testdata/1904090M1_0003.Raw8
+
 ### [CRAIC](http://www.microspectra.com/)
 
   | Extension | Parser               |
   |:----------|:---------------------|
   | [`txt`](https://raw.githubusercontent.com/ropensci/lightr/master/inst/testdata/CRAIC_export.txt) | `lr_parse_generic()` |
+  | [`spc`]   | `lr_parse_spc()`     |
+  
+[`spc`]: https://github.com/ropensci/lightr/raw/master/inst/testdata/compare/CRAIC/CRAIC.spc
   
 ### Others
 
@@ -169,9 +182,10 @@ are using an unsupported format, please
 * [`spectrolab`](https://github.com/meireles/spectrolab)
 
 To our knowledge, `lightr` is the only gratis tool to import some complex file
-formats such as Avantes binary files or OceanOptics `.ProcSpec`. Because of its
-user-friendly high-levels functions and low dependency philosophy, `lightr` may 
-also hopefully prove useful for people working with other languages than R.
+formats such as Avantes (`ABS`, `ROH`, `TRM`, `RFL8`) or CRAIC (`spc`) binary 
+files, or OceanOptics `.ProcSpec`. Because of its user-friendly high-levels
+functions and low dependency philosophy, `lightr` may also hopefully prove
+useful for people working with other languages than R.
 
 
 [`pavo`]: https://cran.r-project.org/package=pavo

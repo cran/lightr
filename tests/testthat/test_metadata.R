@@ -4,9 +4,9 @@ test_that("get_metadata all", {
 
   res <- lr_get_metadata(
     test.file(),
-	  ext = c("TRM", "ROH", "ttt", "trt", "jdx", "jaz", "JazIrrad")
+    ext = c("TRM", "ROH", "ttt", "trt", "jdx", "jaz", "JazIrrad")
   )
-  expect_known_value(res, "known_output/getmetadata_all.rds")
+  expect_known_hash(res, "c585251bd0")
 
 })
 
@@ -15,32 +15,26 @@ test_that("get_metadata recursive", {
   # Recursive
   res <- lr_get_metadata(test.file(),
                      ext = "ProcSpec", subdir = TRUE)
-  expect_known_value(res, "known_output/getmetadata_recursive.rds")
+  expect_known_hash(res, "f82ad88fb1")
 })
 
 test_that("get_metadata warn/error", {
   # Total fail
-  totalfail <- expression({
-    lr_get_metadata(test.file(),
-                ext = "fail")
-  })
-  expect_warning(eval(totalfail), "File import failed")
-
-  expect_null(suppressWarnings(eval(totalfail)))
+  expect_warning(
+    expect_null(lr_get_metadata(test.file(), ext = "fail")),
+    "File import failed"
+  )
 
   # Partial fail
-  partialfail <- expression({
-    lr_get_metadata(test.file(),
-                ext = c("fail", "jdx"))
-  })
-  expect_warning(eval(partialfail), "Could not import one or more")
+  expect_warning(
+    lr_get_metadata(test.file(), ext = c("fail", "jdx")),
+    "Could not import one or more"
+  )
 
   # Missing
-  missing <- expression({
-    lr_get_metadata(ext = "missing")
-  })
-  expect_warning(eval(missing), "No files found")
-
-  expect_null(suppressWarnings(eval(missing)))
+  expect_warning(
+    expect_null(lr_get_metadata(ext = "missing")),
+    "No files found"
+  )
 
 })
