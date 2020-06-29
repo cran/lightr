@@ -1,3 +1,12 @@
+# lightr 1.2
+
+## Minor changes
+
+* fixed tests on platform with no long-doubles ('noLD') 
+* restored tests on 32bits machines
+* `spec_ID` extraction from Avantes exported files (`ttt` and `trt`) is now
+more robust, meaning it should work for more files.
+
 # lightr 1.1
 
 ## New features and major changes
@@ -20,8 +29,9 @@ have been fixed.
 * `jdx` files saved in a locale that uses `,` as the decimal separator are now
 parsed correctly.
 * Avantes exported files in non-English locales (`ttt` and `trt` files) are now 
-parsed correctly again (this was a regression compared to pavo's `getspec()`).
-Thanks to A. Fargevieille for reporting the issue and providing a test file.
+parsed correctly again (this was a regression compared to pavo's 
+`pavo::getspec()`). Thanks to A. Fargevieille for reporting the issue and 
+providing a test file.
 
 # lightr 1.0
 

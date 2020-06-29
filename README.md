@@ -1,12 +1,13 @@
 # `lightr`: import spectral data in R
 
+<!-- badges: start -->
 [![CRAN version](https://www.r-pkg.org/badges/version-ago/lightr)](https://cran.r-project.org/package=lightr)
 [![Dependencies](https://tinyverse.netlify.com/badge/lightr)](https://cran.r-project.org/package=lightr)
-[![Travis build status](https://travis-ci.org/ropensci/lightr.svg?branch=master)](https://travis-ci.org/ropensci/lightr)
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/bisaloo/lightr?branch=master&svg=true)](https://ci.appveyor.com/project/bisaloo/lightr)
+[![R build status](https://github.com/ropensci/lightr/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci/lightr/actions)
 [![Coverage status](https://codecov.io/gh/ropensci/lightr/branch/master/graph/badge.svg)](https://codecov.io/github/ropensci/lightr?branch=master)
 [![Reviewed by rOpenSci](https://badges.ropensci.org/267_status.svg)](https://github.com/ropensci/software-review/issues/267)
 [![JOSS paper](https://joss.theoj.org/papers/7f76d78642d3dc72ea9d8c2597ef0e27/status.svg)](https://joss.theoj.org/papers/7f76d78642d3dc72ea9d8c2597ef0e27)
+<!-- badges: end -->
 
 
 There is no standard file format for spectrometry data and different scientific
@@ -187,9 +188,16 @@ files, or OceanOptics `.ProcSpec`. Because of its user-friendly high-levels
 functions and low dependency philosophy, `lightr` may also hopefully prove
 useful for people working with other languages than R.
 
+## Contributing
+
+There are plenty of ways you can contribute to `lightr`. Please visit our 
+[contributing guide](https://docs.ropensci.org/lightr/CONTRIBUTING.html).
+
+Please note that this package is released with a [Contributor Code of
+Conduct](https://ropensci.org/code-of-conduct/). By contributing to this
+project, you agree to abide by its terms.
+
 
 [`pavo`]: https://cran.r-project.org/package=pavo
 
 [`photobiologyInOut`]: https://cran.r-project.org/package=photobiologyInOut
-
-[![ropensci_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)
