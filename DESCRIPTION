@@ -1,6 +1,6 @@
 Package: lightr
 Title: Read Spectrometric Data and Metadata
-Version: 1.2
+Version: 1.3
 Authors@R: c(
     person("Hugo", "Gruson", role = c("cre", "aut", "cph"),
     email = "hugo.gruson+R@normalesup.org",
@@ -25,11 +25,11 @@ URL: https://docs.ropensci.org/lightr,
         https://github.com/ropensci/lightr
 BugReports: https://github.com/ropensci/lightr/issues
 License: GPL (>= 2)
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Language: en-GB
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2020-06-29 09:51:17 UTC; hugo
+Packaged: 2020-06-30 13:15:11 UTC; hugo
 Author: Hugo Gruson [cre, aut, cph] (<https://orcid.org/0000-0002-4094-1476>),
   Rafael Maia [aut, cph] (<https://orcid.org/0000-0002-7563-9795>),
   Thomas White [aut, cph] (<https://orcid.org/0000-0002-3976-1734>),
@@ -37,4 +37,4 @@ Author: Hugo Gruson [cre, aut, cph] (<https://orcid.org/0000-0002-4094-1476>),
     AvaSoft7 binary files (CC-BY))
 Maintainer: Hugo Gruson <hugo.gruson+R@normalesup.org>
 Repository: CRAN
-Date/Publication: 2020-06-29 18:10:02 UTC
+Date/Publication: 2020-06-30 15:40:11 UTC
