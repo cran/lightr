@@ -82,7 +82,7 @@ lr_parse_jaz <- function(filename) {
 
   # Some files have an extra header for the data, some don't...
   # If they do, it looks like this header will always start with W
-  has_header <- grepl("^W", content[data_start+1])
+  has_header <- startsWith(content[data_start+1], "W")
 
   data <- content[seq(ifelse(has_header, data_start+2, data_start+1),
                       data_end-1)]
@@ -116,7 +116,7 @@ lr_parse_jaz <- function(filename) {
 
   data_final[match(colnames(data), cornames)] <- data
 
-  return(list(data_final, metadata))
+  return(list("data" = data_final, "metadata" = metadata))
 }
 
 #' @rdname lr_parse_jaz

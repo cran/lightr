@@ -1,7 +1,20 @@
+# lightr 1.4
+
+## Minor changes and bug fixes
+
+* Output of the low-level parsers `lr_parse_XXXX()` is now a named list with
+elements `data` and `metadata`
+* `lr_parse_raw8()` and `lr_parse_rfl8()` now explicitly mention the number 
+of spectra in the warnings instead of the generic "multiple spectra"
+* `lr_parse_generic()` now makes sure that the data is ordered by increasing 
+wavelengths, which fixes a bug reported by @itamshab
+
 # lightr 1.3
 
 ## Minor changes
 
+* (mostly internal) `compute_processed()` function is now named
+`lr_compute_processed()`
 * disable hash tests on Solaris (the output is still checked by other tests)
 
 # lightr 1.2

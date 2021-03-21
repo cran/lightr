@@ -1,7 +1,7 @@
 #' Parse Avantes converted file
 #'
 #' Parse Avantes converted file.
-#' <https://www.avantes.com/products/spectrometers>
+#' <https://www.avantes.com/products/spectrometers/>
 #'
 #' @inheritParams lr_parse_generic
 #'
@@ -81,7 +81,7 @@ lr_parse_ttt <- function(filename) {
 
   data_final[match(colnames(data), cornames)] <- data
 
-  return(list(data_final, metadata))
+  return(list("data" = data_final, "metadata" = metadata))
 }
 
 #' @rdname lr_parse_ttt

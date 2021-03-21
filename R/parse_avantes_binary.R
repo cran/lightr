@@ -1,7 +1,7 @@
 #' Parse Avantes binary file
 #'
-#' Parse Avantes binary file (TRM, ABS, ROH, DRK, REF file extensions).
-#' <https://www.avantes.com/products/spectrometers>
+#' Parse Avantes binary file (TRM, ABS, ROH, DRK, REF, RAW8, RFL8 file
+#' extensions). <https://www.avantes.com/products/spectrometers/>
 #'
 #' @inheritParams lr_parse_generic
 #'
@@ -123,7 +123,7 @@ lr_parse_trm <- function(filename) {
 
   # Reorder columns
   data <- data[, c("wl", "dark", "white", "scope")]
-  data$processed <- compute_processed(data)
+  data$processed <- lr_compute_processed(data)
 
   author <- NA_character_
   specmodel <- NA_character_
@@ -132,7 +132,7 @@ lr_parse_trm <- function(filename) {
                 dark_average, white_average, scope_average,
                 dark_boxcar, white_boxcar, scope_boxcar)
 
-  return(list(data, metadata))
+  return(list("data" = data, "metadata" = metadata))
 }
 
 #' @rdname lr_parse_trm
@@ -181,7 +181,7 @@ lr_parse_rfl8 <- function(filename, specnum = 1L) {
 
   if (numspectra > 1 && missing(specnum)) {
     warning(
-      "This file contains multiple spectra and 'specnum' argument is ",
+      "This file contains ", numspectra, " spectra and 'specnum' argument is ",
       "missing. Returning the first spectrum by default.",
       call. = FALSE
     )
@@ -274,7 +274,7 @@ lr_parse_rfl8 <- function(filename, specnum = 1L) {
                                 dark,
                                 "white" = reference,
                                 scope))
-    data$processed <- compute_processed(data)
+    data$processed <- lr_compute_processed(data)
 
     author <- NA_character_
     savetime <- NA_character_ # FIXME: extract this from SPCfiledate
@@ -286,7 +286,7 @@ lr_parse_rfl8 <- function(filename, specnum = 1L) {
                                dark_boxcar, white_boxcar, scope_boxcar)
 
     if (specnum == i) {
-      return(list(data, metadata))
+      return(list("data" = data, "metadata" = metadata))
     }
 
   }

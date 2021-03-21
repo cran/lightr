@@ -18,8 +18,8 @@ white_data <- lr_parse_procspec(
 )
 
 ## -----------------------------------------------------------------------------
-reflect_data = data.frame(reflect_data[[1]])
-white_data = data.frame(white_data[[1]])
+reflect_data <- data.frame(reflect_data[[1]])
+white_data <- data.frame(white_data[[1]])
 
 ## -----------------------------------------------------------------------------
 all.equal(reflect_data$wl, white_data$wl)
