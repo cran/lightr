@@ -10,9 +10,9 @@ lr_convert_tocsv(
   decimal = ".",
   sep = NULL,
   subdir = FALSE,
-  cores = NULL,
   ignore.case = TRUE,
-  overwrite = FALSE
+  overwrite = FALSE,
+  metadata = TRUE
 )
 }
 \arguments{
@@ -32,14 +32,14 @@ default (which are: tab, space, and ";")}
 \item{subdir}{Should subdirectories within the \code{where} folder be included in
 the search? (defaults to \code{FALSE}).}
 
-\item{cores}{deprecated. See \code{\link[future:plan]{future::plan()}} for more details on how to
-customise your parallelisation strategy.}
-
 \item{ignore.case}{Should the extension search be case insensitive? (defaults
 to \code{TRUE})}
 
 \item{overwrite}{logical. Should the function overwrite existing files with
 the same name? (defaults to \code{FALSE}).}
+
+\item{metadata}{logical (defaults to \code{TRUE}). Should metadata be exported as
+well? They will be exported in csv files will the \verb{_metadata.csv} suffix.}
 }
 \value{
 Convert input files to csv and invisibly return the list of created
@@ -58,8 +58,7 @@ the way progress is shown with the \code{\link[progressr:handlers]{progressr::ha
 \section{Warning}{
 
 
-This step loses all metadata associated to the spectra. This metadata is
-critical to ensure reproducibility. We recommended you use
-\code{\link[=lr_get_metadata]{lr_get_metadata()}} to extract this information from your raw data.
+When \code{metadata = TRUE}, if \strong{either} the data \strong{or} metadata export fails,
+nothing will be returned for this file.
 }
 

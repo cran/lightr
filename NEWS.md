@@ -1,3 +1,14 @@
+# lightr 1.5.0
+
+## Major breaking changes
+
+* the `cores` argument in `lr_get_spec()`, `lr_get_metadata()`, and 
+`lr_convert_tocsv()` has been completely removed. It was already deprecated
+since lightr 1.0 (released on CRAN on 2020-01-27)
+* `lr_convert_tocsv()` gains a new `metadata` argument (defaults to `TRUE`) to
+determine if metadata should be exported in a csv file as well alongside the
+spectral data.
+
 # lightr 1.4
 
 ## Minor changes and bug fixes

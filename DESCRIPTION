@@ -1,6 +1,6 @@
 Package: lightr
 Title: Read Spectrometric Data and Metadata
-Version: 1.4
+Version: 1.5.0
 Authors@R: c(
     person("Hugo", "Gruson", role = c("cre", "aut", "cph"),
     email = "hugo.gruson+R@normalesup.org",
@@ -31,7 +31,7 @@ Language: en-GB
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2021-03-21 09:37:33 UTC; hugo
+Packaged: 2021-06-19 09:10:55 UTC; hugo
 Author: Hugo Gruson [cre, aut, cph] (<https://orcid.org/0000-0002-4094-1476>),
   Rafael Maia [aut, cph] (<https://orcid.org/0000-0002-7563-9795>),
   Thomas White [aut, cph] (<https://orcid.org/0000-0002-3976-1734>),
@@ -39,4 +39,4 @@ Author: Hugo Gruson [cre, aut, cph] (<https://orcid.org/0000-0002-4094-1476>),
     AvaSoft7 binary files (CC-BY))
 Maintainer: Hugo Gruson <hugo.gruson+R@normalesup.org>
 Repository: CRAN
-Date/Publication: 2021-03-21 10:30:03 UTC
+Date/Publication: 2021-06-19 09:30:02 UTC

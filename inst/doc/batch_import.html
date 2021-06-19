@@ -12,7 +12,7 @@
 
 <meta name="author" content="Hugo Gruson" />
 
-<meta name="date" content="2021-03-21" />
+<meta name="date" content="2021-06-19" />
 
 <title>Batch import with lr_get_spec() and lr_get_metadata()</title>
 
@@ -40,6 +40,7 @@
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
@@ -138,9 +139,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<h1 class="title toc-ignore">Batch import with lr_get_spec() and lr_get_metadata()</h1>
+<h1 class="title toc-ignore">Batch import with <code>lr_get_spec()</code> and <code>lr_get_metadata()</code></h1>
 <h4 class="author">Hugo Gruson</h4>
-<h4 class="date">2021-03-21</h4>
+<h4 class="date">2021-06-19</h4>
 
 
 
@@ -253,7 +254,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="convert-spectral-data-to-csv-lr_convert_tocsv" class="section level2">
 <h2>Convert spectral data to csv: <code>lr_convert_tocsv()</code></h2>
-<p><code>lr_convert_tocsv()</code> is designed for people that want to an open format version for each individual input file, possibly allowing them to carry on with their analysis using another programming language or software.</p>
+<p><code>lr_convert_tocsv()</code> is designed for users who want an open format version for each individual input file, possibly allowing them to carry on with their analysis using another programming language or software.</p>
 <p>It works in a very similar way to <code>lr_get_spec()</code> and will create <code>csv</code> files with the same file names as the input files (but a different extension).</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lr_convert_tocsv</span>(<span class="at">where =</span> <span class="st">&quot;data&quot;</span>, <span class="at">ext =</span> <span class="st">&quot;procspec&quot;</span>, <span class="at">subdir =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </div>
