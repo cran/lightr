@@ -11,6 +11,11 @@
 #' lr_parse_jaz(system.file("testdata", "jazspec.jaz", package = "lightr"))
 #' lr_parse_jazirrad(system.file("testdata", "irrad.JazIrrad",
 #'                   package = "lightr"))
+#' lr_parse_jaz(system.file("testdata", "OOusb4000.txt", package = "lightr"))
+#' lr_parse_jaz(system.file("testdata", "FMNH6834.00000001.Master.Transmission",
+#'                          package = "lightr"))
+#' lr_parse_jaz(system.file("testdata", "non_english", "OceanView_nonEN.txt",
+#'                          package = "lightr"))
 #'
 #' @export
 #'
@@ -20,45 +25,65 @@ lr_parse_jaz <- function(filename) {
 
   content <- readLines(filename, skipNul = TRUE)
 
-  specID <- grep("^Spectrometers?( Serial Number)?: [[:graph:]]+$",
+  # Can be:
+  # - Spectrometer
+  # - Spectrometers
+  # - Spectrometer Serial Number
+  # - Espectr?metros
+  specID <- grep("^(Spectrometers?( Serial Number)?|Espectr.metros): [[:graph:]]+$",
                  content,
                  value = TRUE)
-  specID <- gsub("^Spectrometers?( Serial Number)?: ", "", specID)
+  specID <- gsub("^(Spectrometers?( Serial Number)?|Espectr.metros): ", "", specID)
 
-  author <- grep("^User: [[:print:]]*$", content, value = TRUE)
-  author <- gsub("^User: ", "", author)
+  author <- grep("^(User|Usuario): [[:print:]]*$", content, value = TRUE)
+  author <- gsub("^(User|Usuario): ", "", author)
 
-  savetime <- grep("^Date: .*", content, value = TRUE)
-  savetime <- gsub("^Date: ", "", savetime)
+  savetime <- grep("^(Date|Fecha): .*", content, value = TRUE)
+  savetime <- gsub("^(Date|Fecha): ", "", savetime)
 
-  # OceanOptics files use locale-dependant date formats but it looks like they
+  oo_savetime_regex <- "^(\\w{3} \\w{3} \\d{2} \\d{2}:\\d{2}:\\d{2}) (\\w+ )?(\\d{4})$"
+  tz <- ""
+
+  if (grepl(oo_savetime_regex, savetime)) {
+    tz <- trimws(gsub(oo_savetime_regex, "\\2", savetime))
+    savetime <- gsub(oo_savetime_regex, "\\1 \\3", savetime)
+  }
+
+  if (tz == "") {
+    tz = "UTC"
+  }
+
+  # OceanOptics files use locale-dependent date formats but it looks like they
   # are always using English for this, even when the locale is not set to
   # English
   orig_locale <- Sys.getlocale("LC_TIME")
   on.exit(Sys.setlocale("LC_TIME", orig_locale))
   Sys.setlocale("LC_TIME", "C")
 
-  savetime <- as.character(as.Date(savetime,
-                                   tryFormats = c("%c", "%+"),
-                                   optional = TRUE))
+  savetime <- as.POSIXct(
+    savetime,
+    tz = tz,
+    tryFormats = c("%c", "%m-%d-%Y, %H:%M:%S")
+  )
+  savetime <- format(savetime, tz = "UTC")
 
   specmodel <- NA_character_
 
   # For those, be careful, the line ends with '(specID)' so no $
-  int <- grep("^Integration Time (.+): [[:digit:]]+", content, value = TRUE)
-  inttime <- gsub("^Integration Time \\(.+\\): ([[:digit:]]+).*", "\\1", int)
+  int <- grep("^(Integration Time|Tiempo de integraci.n) (.+): [[:digit:]]+", content, value = TRUE)
+  inttime <- gsub("^(Integration Time|Tiempo de integraci.n) \\(.+\\): ([[:digit:]]+).*", "\\2", int)
 
-  inttime_unit <- gsub("^Integration Time \\((.+)\\):.*", "\\1", int)
+  inttime_unit <- gsub("^(Integration Time|Tiempo de integraci.n) \\((.+)\\):.*", "\\2", int)
 
   if (inttime_unit == "usec") {
     inttime <- as.numeric(inttime) / 1000
   }
 
-  average <- grep("^Spectra Averaged: [[:digit:]]+", content, value = TRUE)
-  average <- gsub("^Spectra Averaged: ([[:digit:]]+).*", "\\1", average)
+  average <- grep("^(Spectra Averaged|Promedio de Espectros Hechos un): [[:digit:]]+", content, value = TRUE)
+  average <- gsub("^(Spectra Averaged|Promedio de Espectros Hechos un): ([[:digit:]]+).*", "\\2", average)
 
-  boxcar <- grep("^Boxcar Smoothing: [[:digit:]]+", content, value = TRUE)
-  boxcar <- gsub("^Boxcar Smoothing: ([[:digit:]]+).*", "\\1", boxcar)
+  boxcar <- grep("^(Boxcar Smoothing|El Alisar Del Furg.n): [[:digit:]]+", content, value = TRUE)
+  boxcar <- gsub("^(Boxcar Smoothing|El Alisar Del Furg.n): ([[:digit:]]+).*", "\\2", boxcar)
 
   dark_inttime <- white_inttime <- scope_inttime <- inttime
   dark_average <- white_average <- scope_average <- average
@@ -71,8 +96,8 @@ lr_parse_jaz <- function(filename) {
 
   # SPECTRA
 
-  data_start <- grep("^>>>>>Begin (Processed )?Spectral Data<<<<<$", content)
-  data_end <- grep("^>>>>>End (Processed )?Spectral Data<<<<<$", content)
+  data_start <- grep("^(>>>>>Begin (Processed )?Spectral Data<<<<<|>>>>> Comienza Data<<<<< Espectral Procesado Del EL)$", content)
+  data_end <- grep("^(>>>>>End (Processed )?Spectral Data<<<<<|>>>>> Data<<<<< Espectral Procesado Extremo)$", content)
 
   # Some files are missing the ending "tag". Let's then assume that data go to
   # the end of file.

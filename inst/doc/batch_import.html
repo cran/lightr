@@ -12,7 +12,7 @@
 
 <meta name="author" content="Hugo Gruson" />
 
-<meta name="date" content="2021-06-19" />
+<meta name="date" content="2021-07-22" />
 
 <title>Batch import with lr_get_spec() and lr_get_metadata()</title>
 
@@ -141,7 +141,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Batch import with <code>lr_get_spec()</code> and <code>lr_get_metadata()</code></h1>
 <h4 class="author">Hugo Gruson</h4>
-<h4 class="date">2021-06-19</h4>
+<h4 class="date">2021-07-22</h4>
 
 
 
@@ -230,13 +230,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">lr_get_metadata</span>(<span class="at">where =</span> <span class="st">&quot;data&quot;</span>, <span class="at">ext =</span> <span class="fu">c</span>(<span class="st">&quot;trt&quot;</span>, <span class="st">&quot;procspec&quot;</span>), <span class="at">subdir =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>## 7 files found; importing metadata:</code></pre>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res)</span></code></pre></div>
-<pre><code>##                    name       user       date  spec_model     spec_ID
-## 1       avantes_export2       &lt;NA&gt;       &lt;NA&gt;        &lt;NA&gt;   1305084U1
-## 2     OceanOptics_Linux       hugo 2016-03-16     USB4000  USB4C00008
-## 3   OceanOptics_Windows doutrelant 2015-12-04      JazUSB    JAZA2982
-## 4 OceanOptics_badencode       user 2016-12-02 USB2000Plus USB2+H06330
-## 5              whiteref      gomez 2018-08-02     USB4000  USB4C00008
-## 6             BR_PF26_1 Adminlocal 2006-06-24     USB4000  USB4C00008
+<pre><code>##                    name       user            datetime  spec_model     spec_ID
+## 1       avantes_export2       &lt;NA&gt;                &lt;NA&gt;        &lt;NA&gt;   1305084U1
+## 2     OceanOptics_Linux       hugo 2016-03-16 13:18:31     USB4000  USB4C00008
+## 3   OceanOptics_Windows doutrelant 2015-12-04 10:29:14      JazUSB    JAZA2982
+## 4 OceanOptics_badencode       user 2016-12-02 20:39:12 USB2000Plus USB2+H06330
+## 5              whiteref      gomez 2018-08-02 15:56:19     USB4000  USB4C00008
+## 6             BR_PF26_1 Adminlocal 2006-06-24 08:49:06     USB4000  USB4C00008
 ##   white_inttime dark_inttime sample_inttime white_avgs dark_avgs sample_avgs
 ## 1            95           95             95         20        20          20
 ## 2           200          200            200          5         5           5
