@@ -1,6 +1,6 @@
-1f379726b7d6e771db2a54caf171bd16 *DESCRIPTION
+3198ca8ab50e12ed7d58600df883be9a *DESCRIPTION
 15d85271396bbbfbd09d04d28eb09f16 *NAMESPACE
-ea52999b5dc1cf5f81c64bdbd19e91d9 *NEWS.md
+59a7b602ae432373bb3bf0b2c4e2c66b *NEWS.md
 b1f5f31522a7680a819c7c55d560f6bf *R/compute_processed.R
 97b262477e62bafddb13c123bfe5ea2a *R/convert_tocsv.R
 dfedd1847d6e9f45bc04b188a40f0abf *R/dev_utils.R
@@ -17,7 +17,7 @@ ba07be14336ad60a3e4c3a6eda8e7fae *R/parse_oceanoptics_converted.R
 6ab093b99f451621017448f778d34604 *R/parse_spc.R
 947fcca604a1e34bbc63e5a2604f5d79 *R/utils.R
 fd6d55fe870ce8a442bed8e21e7fb457 *README.md
-c4485a20c112072e2c3cf847393b9d80 *build/partial.rdb
+c246dfd7c0b3cdffdeb5ddc993d1f354 *build/partial.rdb
 61cc80a28aad70a41012056fa087ee49 *build/vignette.rds
 91bf059c935ceca5e37c37f464582a4f *inst/CITATION
 544a68a66f0e77309bde2724e9d3cc20 *inst/WORDLIST
@@ -100,7 +100,7 @@ c6db02655f5d51f4d5c3b97c13c8fe38 *tests/testthat/_snaps/getspec.md
 96717cb6a25e00e725fd2d2b75b0f915 *tests/testthat/_snaps/metadata.md
 574962854b4322b5098ae7b8fea12929 *tests/testthat/setup.R
 c7e15cae54a26aa75d5ec7872da91613 *tests/testthat/test_compare_official.R
-dc21c34e1df7918fd3504340559165da *tests/testthat/test_compare_photobiologyInOut.R
+20adc98103508dfd70ef6595cff707f1 *tests/testthat/test_compare_photobiologyInOut.R
 0890519aadfc24e41aa238753742965e *tests/testthat/test_convert.R
 1fac988c9cf607beb13679ce8844776b *tests/testthat/test_dev.R
 1e8796b144e110d6a4e11712c8370610 *tests/testthat/test_dispatch.R
