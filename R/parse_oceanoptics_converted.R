@@ -8,14 +8,27 @@
 #' @inherit lr_parse_generic return details
 #'
 #' @examples
-#' lr_parse_jaz(system.file("testdata", "jazspec.jaz", package = "lightr"))
-#' lr_parse_jazirrad(system.file("testdata", "irrad.JazIrrad",
-#'                   package = "lightr"))
-#' lr_parse_jaz(system.file("testdata", "OOusb4000.txt", package = "lightr"))
-#' lr_parse_jaz(system.file("testdata", "FMNH6834.00000001.Master.Transmission",
-#'                          package = "lightr"))
-#' lr_parse_jaz(system.file("testdata", "non_english", "OceanView_nonEN.txt",
-#'                          package = "lightr"))
+#' res_jaz <- lr_parse_jaz(system.file("testdata", "jazspec.jaz",
+#'                         package = "lightr"))
+#' head(res_jaz$data)
+#' res_jaz$metadata
+#'
+#' res_jazirrad <- lr_parse_jazirrad(system.file("testdata", "irrad.JazIrrad",
+#'                                   package = "lightr"))
+#' head(res_jazirrad$data)
+#' res_jazirrad$metadata
+#'
+#' res_usb4000 <- lr_parse_jaz(system.file("testdata", "OOusb4000.txt",
+#'                             package = "lightr"))
+#' head(res_usb4000$data)
+#' res_usb4000$metadata
+#'
+#' res_transmission <- lr_parse_jaz(
+#'   system.file("testdata", "FMNH6834.00000001.Master.Transmission",
+#'                package = "lightr")
+#' )
+#' head(res_transmission$data)
+#' res_transmission$metadata
 #'
 #' @export
 #'
@@ -24,6 +37,9 @@ lr_parse_jaz <- function(filename) {
   # METADATA
 
   content <- readLines(filename, skipNul = TRUE)
+
+  # Convert to ASCII
+  content <- vapply(content, iconv, to = "ASCII", sub = "", character(1))
 
   # Can be:
   # - Spectrometer
@@ -75,7 +91,7 @@ lr_parse_jaz <- function(filename) {
 
   inttime_unit <- gsub("^(Integration Time|Tiempo de integraci.n) \\((.+)\\):.*", "\\2", int)
 
-  if (inttime_unit == "usec") {
+  if (identical(unname(inttime_unit), "usec")) {
     inttime <- as.numeric(inttime) / 1000
   }
 
@@ -141,7 +157,7 @@ lr_parse_jaz <- function(filename) {
 
   data_final[match(colnames(data), cornames)] <- data
 
-  return(list("data" = data_final, "metadata" = metadata))
+  return(list("data" = data_final, "metadata" = unname(metadata)))
 }
 
 #' @rdname lr_parse_jaz

@@ -1,3 +1,9 @@
+# lightr 1.6.1
+
+## Minor changes
+
+* fix failing tests on CRAN caused by non UTF-8 files
+
 # lightr 1.6.0
 
 ## Major breaking changes
