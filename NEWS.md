@@ -1,3 +1,14 @@
+# lightr 1.7.0
+
+## Minor changes
+
+* Errors in low-level parsers are now passed as warnings in high-level 
+`lr_get_XXX()` functions instead of being completely silenced.
+
+* IRR8 (irradiance files produced by AvaSoft 8) are now explicitly supported by 
+`lr_get_spec()`. An alias has been added for the low-level parser: 
+`lr_parse_irr8()`.
+
 # lightr 1.6.2
 
 ## Minor changes
