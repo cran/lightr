@@ -17,7 +17,7 @@ head(res)
 res <- lr_get_spec(where = "data", ext = "procspec", subdir = TRUE, ignore.case = FALSE)
 
 ## -----------------------------------------------------------------------------
-res <- lr_get_spec(where = "data/puffin", ext = "procspec", interpolate = FALSE)
+res <- lr_get_spec(where = file.path("data", "puffin"), ext = "procspec", interpolate = FALSE)
 head(res)
 
 ## -----------------------------------------------------------------------------

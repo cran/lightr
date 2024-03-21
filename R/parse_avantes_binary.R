@@ -90,7 +90,7 @@ lr_parse_trm <- function(filename) {
     # onboard temp in degrees Celsius
     NTC1 <- readBin(f, "numeric", 1, 4, endian = "little")
     # NTC2 in Volt (not connected)
-    NTC2 <- readBin(f, "numeric",1, 4, endian = "little")
+    NTC2 <- readBin(f, "numeric", 1, 4, endian = "little")
     # detector temp in degr Celsius (only TEC, NIR)
     Thermistor <- readBin(f, "numeric", 1, 4, endian = "little")
     dummy3 <- readBin(f, "numeric", 1, 4, endian = "little")
@@ -98,7 +98,7 @@ lr_parse_trm <- function(filename) {
 
   # Data
   if (grepl("\\.(abs|trm)$", filename, ignore.case = TRUE)) {
-    data <- readBin(f, "numeric", 3*(ipixlast - ipixfirst + 1), 4, endian = "little")
+    data <- readBin(f, "numeric", 3 * (ipixlast - ipixfirst + 1), 4, endian = "little")
     data <- setNames(as.data.frame(matrix(data, ncol = 3, byrow = TRUE)),
                      c("scope", "white", "dark"))
   } else {# scope mode
@@ -189,8 +189,15 @@ lr_parse_rfl8 <- function(filename, specnum = 1L) {
   on.exit(close(f))
 
   # HEADER
-  # always 'AVS82'
-  marker <- rawToChar(readBin(f, "raw", n = 5, endian = "little"))
+  version <- rawToChar(readBin(f, "raw", n = 5, endian = "little"))
+
+  if (version != "AVS82") {
+    stop(
+      "This parser has only been tested properly with files produced by ",
+      "AvaSoft 8.2.\nIf you're seeing this error message and would like us to ",
+      "support your files, please get in touch with an example.", call. = FALSE
+    )
+  }
 
   # number of spectra in file
   numspectra <- readBin(f, "integer", size = 1, signed = FALSE, endian = "little")
@@ -215,6 +222,15 @@ lr_parse_rfl8 <- function(filename, specnum = 1L) {
 
     seqnum <- readBin(f, "integer", size = 1, signed = FALSE, endian = "little")
 
+    # Measurement mode
+    # - 0:scope
+    # - 1: absorbance
+    # - 2: scope corrected for dark
+    # - 3: transmission
+    # - 4: reflectance
+    # - 5: irradiance
+    # - 6: relative irradiance
+    # - 7: temperature
     measmode <- readBin(f, "integer", size = 1, signed = FALSE, endian = "little")
 
     bitness <- readBin(f, "integer", size = 1, signed = FALSE, endian = "little")

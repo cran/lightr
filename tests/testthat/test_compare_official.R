@@ -1,11 +1,11 @@
-test_that("compare procspec/spectrasuite", {
+test_that("compare procspec & spectrasuite", {
 
   # Compare result from custom parser (lr_parse_procspec) and official parser
-  specs <- lr_get_spec(test.file("compare/OceanInsight"),
+  specs <- lr_get_spec(test.file("compare", "OceanInsight"),
                        ext = "ProcSpec",
                        lim = c(100, 1000),
                        interpolate = FALSE)
-  specs_spectrasuite <- lr_get_spec(test.file("compare/OceanInsight"),
+  specs_spectrasuite <- lr_get_spec(test.file("compare", "OceanInsight"),
                                     ext = "txt",
                                     lim = c(100, 1000),
                                     interpolate = FALSE)
@@ -13,7 +13,7 @@ test_that("compare procspec/spectrasuite", {
   expect_equal(specs, specs_spectrasuite, tolerance = 1e-4)
 })
 
-test_that("compare trm/ttt", {
+test_that("compare trm & ttt", {
 
   # Compare result from custom parser (lr_parse_trm) and official parser
   # - J_PIR_AVRIL2016_0001 uses Avasoft 6.0
@@ -21,8 +21,8 @@ test_that("compare trm/ttt", {
 
   # FIXME: for some reason, the conversion from the official parser skips some
   # wl... Figure out why?
-  specs <- lr_get_spec(test.file("compare/Avantes"), ext = "TRM")
-  specs_avasoft <- lr_get_spec(test.file("compare/Avantes"), ext = "ttt")
+  specs <- lr_get_spec(test.file("compare", "Avantes"), ext = "TRM")
+  specs_avasoft <- lr_get_spec(test.file("compare", "Avantes"), ext = "ttt")
 
   expect_equal(specs, specs_avasoft, tolerance = 1e-4)
 
@@ -31,9 +31,10 @@ test_that("compare trm/ttt", {
 
   # FIXME: Avasoft sets "processed" to 0 when "dark" > "white". Hence why we
   # only test the first 200 rows until now.
-  expect_equal(spec1[seq_len(200), c("wl", "processed")],
-               spec1_avasoft[seq_len(200), c("wl", "processed")],
-               tolerance = 1e-4)
+  spec1[spec1$dark > spec1$white, ] <- 0
+  expect_equal(spec1$processed,
+               spec1_avasoft$processed,
+               tolerance = 1e-7)
 
   spec2_avasoft <- lr_parse_generic(test.file("compare", "Avantes", "feather_2.TXT"))[[1]]
   spec2 <- lr_parse_rfl8(test.file("compare", "Avantes", "feather.RFL8"), specnum = 2)[[1]]
@@ -44,13 +45,13 @@ test_that("compare trm/ttt", {
 
 })
 
-test_that("compare spc/craic", {
+test_that("compare spc & craic", {
 
-  specs <- lr_get_spec(test.file("compare/CRAIC"),
+  specs <- lr_get_spec(test.file("compare", "CRAIC"),
                        ext = "spc",
                        lim = c(100, 1000),
                        interpolate = FALSE)
-  specs_craic <- lr_get_spec(test.file("compare/CRAIC"),
+  specs_craic <- lr_get_spec(test.file("compare", "CRAIC"),
                              ext = "txt",
                              lim = c(100, 1000),
                              interpolate = FALSE)

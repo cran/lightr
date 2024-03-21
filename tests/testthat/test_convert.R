@@ -26,8 +26,8 @@ test_that("Convert all", {
   expect_true(all(file.exists(output_metadata_files)))
 
   # It doesn't change the behaviour of getspec
-#  expect_equal(getspec("conversion_test", exts),
-#               getspec("conversion_test", "csv", sep = ","))
+  # expect_equal(getspec("conversion_test", exts),
+  #              getspec("conversion_test", "csv", sep = ","))
 
   unlink(output_files)
 
@@ -61,7 +61,11 @@ test_that("Convert csv", {
   tdir <- file.path(tempdir(), "test_convert")
 
   expect_warning(
-    expect_message(lr_convert_tocsv(file.path(tdir, "csv"), ext = "csv", sep = ","))
+    expect_warning(
+      expect_message(lr_convert_tocsv(file.path(tdir, "csv"), ext = "csv", sep = ",")),
+      "already exists"
+    ),
+    "import failed"
   )
 
   output <- expect_message(
@@ -75,19 +79,25 @@ test_that("Convert csv", {
 })
 
 
-test_that("Convert warn/error", {
+test_that("Convert warn & error", {
 
   tdir <- file.path(tempdir(), "test_convert")
   # Total fail
   expect_warning(
-    expect_message(expect_null(lr_convert_tocsv(tdir, ext = "fail"))),
-    "File import failed"
+    expect_warning(
+      expect_message(expect_null(lr_convert_tocsv(tdir, ext = "fail"))),
+      "File import failed"
+    ),
+    "different value for 'sep'"
   )
 
   # Partial fail
   output <- expect_warning(
-    expect_message(lr_convert_tocsv(tdir, ext = c("fail", "jdx"), overwrite = TRUE)),
-    "Could not import one or more"
+    expect_warning(
+      expect_message(lr_convert_tocsv(tdir, ext = c("fail", "jdx"), overwrite = TRUE)),
+      "Could not import one or more"
+    ),
+    "different value for 'sep'"
   )
 
   unlink(output)

@@ -25,7 +25,6 @@ white_data <- data.frame(white_data[[1]])
 all.equal(reflect_data$wl, white_data$wl)
 
 ## -----------------------------------------------------------------------------
-res <- (reflect_data$scope - reflect_data$dark) / 
-       (white_data$white - white_data$dark)
+res <- (reflect_data$scope - reflect_data$dark) / (white_data$white - white_data$dark)
 head(res)
 
